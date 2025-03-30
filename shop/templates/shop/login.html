@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | MyAwesomeCart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: red;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-bold text-center text-gray-700">Login to Your Account</h2>
+
+        <!-- Display Error Messages -->
+        {% if form.errors %}
+            <div class="bg-red-100 text-red-700 p-3 rounded-md mb-4">
+                <ul>
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field|title }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'login_user' %}" class="mt-6">
+            {% csrf_token %}
+            <div>
+                <label class="block text-gray-600">Username</label>
+                <input type="text" name="username" required
+                    class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+            </div>
+            <div class="mt-4">
+                <label class="block text-gray-600">Password</label>
+                <input type="password" name="password" required
+                    class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+            </div>
+
+            <button type="submit"
+                class="w-full mt-6 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+                Login
+            </button>
+        </form>
+
+        <p class="mt-4 text-center text-gray-600">
+            Don't have an account? <a href="{% url 'register_user' %}" class="text-blue-500">Register here</a>
+        </p>
+    </div>
+
+    <!-- Error Popup -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        {% if messages %}
+            let toast = document.getElementById("toast");
+            {% for message in messages %}
+                toast.innerText = "{{ message }}";
+                toast.style.display = "block";
+                setTimeout(() => { toast.style.display = "none"; }, 3000);
+            {% endfor %}
+        {% endif %}
+    </script>
+
+</body>
+</html>
